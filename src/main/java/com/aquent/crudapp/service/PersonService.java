@@ -15,6 +15,13 @@ public interface PersonService {
      * @return list of person records
      */
     List<Person> listPeople();
+    
+    /**
+     * Retrieves a list of people with no client association.
+     *
+     * @return list of person records
+     */
+    List<Person> listPeopleNotAssociatedWithAClient();
 
     /**
      * Creates a new person record.

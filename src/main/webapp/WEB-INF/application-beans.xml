@@ -1,41 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:c="http://www.springframework.org/schema/c"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-  <tx:annotation-driven/>
+	<tx:annotation-driven />
 
-  <jdbc:embedded-database id="dataSource">
-    <jdbc:script location="classpath:schema.sql" />
-    <jdbc:script location="classpath:data.sql" />
-  </jdbc:embedded-database>
+	<jdbc:embedded-database id="dataSource">
+		<jdbc:script location="classpath:schema.sql" />
+		<jdbc:script location="classpath:data.sql" />
+	</jdbc:embedded-database>
+	
 
-  <bean id="transactionManager"
-        class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-        p:dataSource-ref="dataSource" />
+	<!-- Better to configure connection pooling directly in Tomcat, but this will do for now -->
+	<bean id="dataSource_tomcat_pool" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/crud_app_schema?useSSL=false" />
+		<property name="username" value="crud_app" />
+		<property name="password" value="crud_app" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="5" />
+		<property name="maxIdle" value="2" />
+		<property name="minIdle" value="1" />
+	</bean>
 
-  <bean id="jdbcTemplate"
-        class="org.springframework.jdbc.core.JdbcTemplate"
-        p:dataSource-ref="dataSource" />
 
-  <bean id="validator"
-        class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	<!-- In memory DB  -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="dataSource" />
+	
+		
+	<!-- MySQL  Uncomment this and comment out the memory DB entry above if you would like to use MySQL.
+	     A script to create and populate a MySQL DB is located in the webapp/resources directory.
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="dataSource_tomcat_pool" />	
+    -->
 
-  <bean id="personDao" class="com.aquent.crudapp.data.dao.jdbc.PersonJdbcDao">
-    <property name="namedParameterJdbcTemplate">
-      <bean class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate" c:classicJdbcTemplate-ref="jdbcTemplate" />
-    </property>
-  </bean>
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource" />
 
-  <bean id="personService"
-        class="com.aquent.crudapp.service.DefaultPersonService"
-        p:personDao-ref="personDao"
-        p:validator-ref="validator" />
+
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+	<bean id="personDao" class="com.aquent.crudapp.data.dao.jdbc.PersonJdbcDao">
+		<property name="namedParameterJdbcTemplate">
+			<bean
+				class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"
+				c:classicJdbcTemplate-ref="jdbcTemplate" />
+		</property>
+	</bean>
+
+	<bean id="personService" class="com.aquent.crudapp.service.DefaultPersonService"
+		p:personDao-ref="personDao" p:validator-ref="validator" />
+		
+		
+	<bean id="clientDao" class="com.aquent.crudapp.data.dao.jdbc.ClientJdbcDao">
+		<property name="namedParameterJdbcTemplate">
+			<bean
+				class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"
+				c:classicJdbcTemplate-ref="jdbcTemplate" />
+		</property>
+	</bean>
+
+	<bean id="clientService" class="com.aquent.crudapp.service.DefaultClientService"
+		p:personDao-ref="clientDao" p:validator-ref="validator" />
 
 </beans>

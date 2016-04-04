@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aquent.crudapp.domain.Person;
+import com.aquent.crudapp.service.ClientService;
 import com.aquent.crudapp.service.PersonService;
 
 /**
@@ -25,6 +26,7 @@ public class PersonController {
     public static final String COMMAND_DELETE = "Delete";
 
     @Inject private PersonService personService;
+    @Inject private ClientService clientService;
 
     /**
      * Renders the listing page.
@@ -47,6 +49,7 @@ public class PersonController {
     public ModelAndView create() {
         ModelAndView mav = new ModelAndView("person/create");
         mav.addObject("person", new Person());
+        mav.addObject("clientsAll", clientService.listClients()); 
         mav.addObject("errors", new ArrayList<String>());
         return mav;
     }
@@ -72,6 +75,24 @@ public class PersonController {
             return mav;
         }
     }
+    
+    
+    /**
+     * Renders the contact detail page.
+     *
+     * @return detail view populated with one contact record
+     */
+    @RequestMapping(value = "detail/{personId}", method = RequestMethod.GET)
+    public ModelAndView detail(@PathVariable Integer personId) {
+        ModelAndView mav = new ModelAndView("person/detail");
+        if( personId != null && personId > 0 ){
+            mav.addObject("person", personService.readPerson(personId));       	
+        }
+
+        mav.addObject("errors", new ArrayList<String>());
+        return mav;
+    }
+    
 
     /**
      * Renders an edit form for an existing person record.
@@ -82,7 +103,10 @@ public class PersonController {
     @RequestMapping(value = "edit/{personId}", method = RequestMethod.GET)
     public ModelAndView edit(@PathVariable Integer personId) {
         ModelAndView mav = new ModelAndView("person/edit");
-        mav.addObject("person", personService.readPerson(personId));
+        if( personId != null && personId > 0 ){
+            mav.addObject("person", personService.readPerson(personId));
+            mav.addObject("clientsAll", clientService.listClients());       	
+        }
         mav.addObject("errors", new ArrayList<String>());
         return mav;
     }
@@ -100,7 +124,11 @@ public class PersonController {
         List<String> errors = personService.validatePerson(person);
         if (errors.isEmpty()) {
             personService.updatePerson(person);
-            return new ModelAndView("redirect:/person/list");
+            ModelAndView mav = new ModelAndView("person/detail");
+            person = personService.readPerson(person.getPersonId());
+            person.setSuccessfulUpdatePerformed(true);
+            mav.addObject("person", person);
+            return mav;
         } else {
             ModelAndView mav = new ModelAndView("person/edit");
             mav.addObject("person", person);

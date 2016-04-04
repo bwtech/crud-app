@@ -29,12 +29,19 @@ public class DefaultPersonService implements PersonService {
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
-
+    
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Person> listPeople() {
+    	System.out.println("Simple test 8");
         return personDao.listPeople();
     }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Person> listPeopleNotAssociatedWithAClient() {
+        return personDao.listPeopleNotAssociatedWithAClient();
+    }    
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

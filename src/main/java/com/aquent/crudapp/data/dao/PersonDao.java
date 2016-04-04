@@ -30,7 +30,16 @@ public interface PersonDao {
      * @return the person record
      */
     Person readPerson(Integer id);
+    
+    
+    /**
+     * Retrieves a list of people with no client association
+     *
+     * @return list of person records
+     */
+    List<Person> listPeopleNotAssociatedWithAClient();
 
+    
     /**
      * Updates an existing person record.
      *

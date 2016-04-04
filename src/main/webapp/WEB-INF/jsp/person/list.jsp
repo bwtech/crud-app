@@ -1,52 +1,157 @@
 <%-- 
     Document   : list
-    Created on : Apr 22, 2011, 2:25:22 PM
-    Author     : FMilens
+    Created on : Apr 3, 2016
+    Author     : BWallace
 --%>
-
-<%@taglib prefix='c' uri='http://java.sun.com/jsp/jstl/core' %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@taglib prefix='c' uri='http://java.sun.com/jsp/jstl/core'%>
 <%@taglib prefix='fn' uri='http://java.sun.com/jsp/jstl/functions'%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
 
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Person Listing</title>
-    </head>
-    <body>
-        <h1>Person Listing</h1>     
-        <p><a href="${pageContext.request.contextPath}/person/create">Create New Person</a></p>
-        <c:choose>
-            <c:when test="${fn:length(persons) gt 0}">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email Address</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${persons}" var="person">
-                            <tr>
-                                <td>${person.firstName}</td>
-                                <td>${person.lastName}</td>
-                                <td>${person.emailAddress}</td>
-                                <td>
-                                    <a href="${pageContext.request.contextPath}/person/edit/${person.personId}">Edit Person</a>
-                                    <a href="${pageContext.request.contextPath}/person/delete/${person.personId}">Delete Person</a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </c:when>
-            <c:otherwise>
-                <p>No results found.</p>
-            </c:otherwise>
-        </c:choose>
-    </body>
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aquent Test Crud App - Contacts</title>
+
+
+<spring:url value="/resources/css/foundation.css" var="mainCss" />
+<spring:url value="/resources/css/app.css" var="appCss" />
+
+<spring:url value="/resources/js/vendor/jquery.js" var="jqueryMain" />
+<spring:url value="/resources/js/vendor/what-input.js"
+	var="what-inputMain" />
+<spring:url value="/resources/js/vendor/foundation.js"
+	var="foundation_js_Main" />
+<spring:url value="/resources/js/app.js" var="app_js_main" />
+
+<spring:url value="/resources/jqueryvalidation/jquery.validate.js"
+	var="jQueryValidation" />
+
+
+<link href="${mainCss}" rel="stylesheet" />
+<link href="${appCss}" rel="stylesheet" />
+
+
+
+</head>
+<body>
+
+
+	<div class="top-bar">
+		<div class="top-bar-left">
+			<ul class="menu">
+				<li class="menu-text">Aquent</li>
+			</ul>
+		</div>
+		<div class="top-bar-right">
+			<ul class="menu">
+				<li><a href="${pageContext.request.contextPath}/">Home</a></li>
+				<li><a href="#"></a></li>
+				<li><a href="#"></a></li>
+				<li><a href="#"></a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="callout large primary">
+		<div class="row column text-center">
+			<h1>Contacts</h1>
+		</div>
+	</div>
+	<div class="row" id="content">
+		<div class="medium-8 columns">
+
+			<div class="blog-post">
+				<h3>Contact List</h3>
+				<p>
+
+					<c:choose>
+						<c:when test="${fn:length(persons) gt 0}">
+							<table>
+								<thead>
+									<tr>
+										<th>First Name</th>
+										<th>Last Name</th>
+										<th>Email Address</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${persons}" var="person">
+										<tr>
+											<td>${person.firstName}</td>
+											<td>${person.lastName}</td>
+											<td>${person.emailAddress}</td>
+											<td><a
+												href="${pageContext.request.contextPath}/person/detail/${person.personId}">Details</a>
+												&nbsp; &nbsp;&nbsp;&nbsp; <a
+												href="${pageContext.request.contextPath}/person/edit/${person.personId}">Edit</a>
+												&nbsp; &nbsp;&nbsp;&nbsp; <a
+												href="${pageContext.request.contextPath}/person/delete/${person.personId}">Delete</a>
+											</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</c:when>
+						<c:otherwise>
+							<p>No results found.</p>
+						</c:otherwise>
+					</c:choose>
+
+				</p>
+
+			</div>
+
+
+
+
+
+
+
+
+
+
+		</div>
+		<div class="medium-3 columns" data-sticky-container>
+			<div class="sticky" data-sticky data-anchor="content">
+				<h4>Clients</h4>
+				<ul>
+					<li><a href="${pageContext.request.contextPath}/client/list">View
+							All</a></li>
+					<li><a href="${pageContext.request.contextPath}/client/create">Create</a></li>
+				</ul>
+				<h4>Contacts</h4>
+				<ul>
+					<li><a href="${pageContext.request.contextPath}/person/list">View
+							All</a></li>
+					<li><a href="${pageContext.request.contextPath}/person/create">Create</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+
+	<script>
+      $(document).foundation();
+    </script>
+
+
+	<script src="${jqueryMain}"></script>
+	<script src="${what-inputMain}"></script>
+	<script src="${foundation_js_Main}"></script>
+	<script src="${app_js_main}"></script>
+	<script src="${jQueryValidation}"></script>
+
+
+
+</body>
 </html>
+
+
+
+

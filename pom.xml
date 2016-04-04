@@ -8,6 +8,24 @@
   <artifactId>crud-app</artifactId>
   <packaging>war</packaging>
   <version>1.0</version>
+  
+  	<name>Test CRUD Appp</name>
+	<description>This is simple CRUD web application used for testing potential employees.</description>
+	
+	<organization>
+		<name>Aquent - Creative, Digital and Marketing Staffing Agency</name>
+		<url>http://http://aquent.com/</url>
+	</organization>
+	
+	<developers>
+		<developer>
+			<name>Brian Wallace</name>
+			<email>bw.tech@gmail.com</email>
+		</developer>
+		<developer>
+			<name>FMilens</name>
+		</developer>		
+	</developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -67,6 +85,16 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>mysql</groupId>
+    	<artifactId>mysql-connector-java</artifactId>
+    	<version>5.1.38</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.tomcat</groupId>
+    	<artifactId>tomcat-jdbc</artifactId>
+    	<version>9.0.0.M4</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -80,6 +108,20 @@
           <target>${java.version}</target>
         </configuration>
       </plugin>
+			<plugin>
+				<groupId>org.zeroturnaround</groupId>
+				<artifactId>jrebel-maven-plugin</artifactId>
+				<version>1.1.5</version>
+				<executions>
+					<execution>
+						<id>generate-rebel-xml</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>      
     </plugins>
   </build>
 </project>

@@ -37,6 +37,15 @@ public class Person {
     @NotNull
     @Size(min = 5, max = 5, message = "Zip code is required with length 5")
     private String zipCode;
+    
+    private Client client;
+    
+    private Boolean successfulUpdatePerformed = false;
+    
+    private Boolean currentlyAssociatedWithAClient = false;
+    
+    /** Used when the person is edited. Holds the ID of the client associated with this person*/
+    private String clientId;
 
     public Integer getPersonId() {
         return personId;
@@ -60,6 +69,10 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    
+    public String getLastNameAndFirstName(){
+    	return this.lastName + ", " + this.firstName;
     }
 
     public String getEmailAddress() {
@@ -101,4 +114,82 @@ public class Person {
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
+
+ 
+	public Client getClient() {
+		return client;
+	}
+
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	/**
+	 * @return the clientId
+	 */
+	public String getClientId() {
+		return clientId;
+	}
+
+	/**
+	 * @param clientId the clientId to set
+	 */
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	/**
+	 * @return the successfulUpdatePerformed
+	 */
+	public Boolean getSuccessfulUpdatePerformed() {
+		return successfulUpdatePerformed;
+	}
+
+	/**
+	 * @param successfulUpdatePerfirmed the successfulUpdatePerformed to set
+	 */
+	public void setSuccessfulUpdatePerformed(Boolean successfulUpdatePerformed) {
+		this.successfulUpdatePerformed = successfulUpdatePerformed;
+	}
+
+	/**
+	 * @return the currentlyAssociatedWithAClient
+	 */
+	public Boolean getCurrentlyAssociatedWithAClient() {
+		return currentlyAssociatedWithAClient;
+	}
+
+	/**
+	 * @param currentlyAssociatedWithAClient the currentlyAssociatedWithAClient to set
+	 */
+	public void setCurrentlyAssociatedWithAClient(Boolean currentlyAssociatedWithAClient) {
+		this.currentlyAssociatedWithAClient = currentlyAssociatedWithAClient;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((personId == null) ? 0 : personId.hashCode());
+		return result;
+	}
+
+ 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (personId == null) {
+			if (other.personId != null)
+				return false;
+		} else if (!personId.equals(other.personId))
+			return false;
+		return true;
+	}
 }
